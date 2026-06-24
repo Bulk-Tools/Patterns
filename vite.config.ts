@@ -4,7 +4,11 @@ import path from 'path';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig(() => {
+  const repoName = process.env.GITHUB_REPOSITORY?.split('/')[1];
+  const basePath = process.env.VITE_BASE_PATH ?? (process.env.GITHUB_ACTIONS === 'true' && repoName ? `/${repoName}/` : '/');
+
   return {
+    base: basePath,
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
