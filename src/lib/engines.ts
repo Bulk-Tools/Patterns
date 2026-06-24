@@ -21,6 +21,27 @@ export interface PatternParams {
   seed: number;
 }
 
+export const DEFAULT_PATTERN_PARAMS: PatternParams = {
+  engine: 'isometric',
+  gridX: 10,
+  gridY: 10,
+  strokeWeight: 3,
+  complexity: 50,
+  palette: 'Cyberpunk',
+  seed: 1,
+};
+
+export function clampPatternParams(params: PatternParams): PatternParams {
+  return {
+    ...params,
+    gridX: Math.min(50, Math.max(2, Math.floor(params.gridX))),
+    gridY: Math.min(50, Math.max(2, Math.floor(params.gridY))),
+    strokeWeight: Math.min(25, Math.max(1, Math.floor(params.strokeWeight))),
+    complexity: Math.min(100, Math.max(1, Math.floor(params.complexity))),
+    seed: Math.floor(Math.abs(params.seed)) >>> 0,
+  };
+}
+
 export function generateRandomParams(complexityLock: number): PatternParams {
   const engines: EngineType[] = ['isometric', 'wave', 'ribbon', 'truchet', 'hexagonal', 'spirograph'];
   const engine = engines[Math.floor(Math.random() * engines.length)];
@@ -47,7 +68,7 @@ export function generateRandomParams(complexityLock: number): PatternParams {
 // 32-bit robust PRNG
 function mulberry32(a: number) {
   return function() {
-    var t = a += 0x6D2B79F5;
+    let t = a += 0x6D2B79F5;
     t = Math.imul(t ^ t >>> 15, t | 1);
     t ^= t + Math.imul(t ^ t >>> 7, t | 61);
     return ((t ^ t >>> 14) >>> 0) / 4294967296;
@@ -55,7 +76,8 @@ function mulberry32(a: number) {
 }
 
 export function getTileDimensions(params: PatternParams) {
-  let { gridX, gridY, engine } = params;
+  const { gridX, engine } = params;
+  let { gridY } = params;
   if (engine === 'truchet' || engine === 'hexagonal') {
     gridY = gridX; // Force square proportions for these to tile seamlessly
   } else if (engine === 'isometric') {
