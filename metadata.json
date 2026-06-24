@@ -1,0 +1,8 @@
+{
+  "name": "Parametric Pattern Forge",
+  "description": "Generate highly unique, mathematically sound, infinitely repeating seamless textures and geometric vector graphics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
