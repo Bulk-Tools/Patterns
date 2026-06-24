@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { CanvasGraphics, PALETTES, PatternParams, drawTile, getTileDimensions } from '../lib/engines';
 
 export function usePatternRenderer(params: PatternParams) {
@@ -8,9 +8,15 @@ export function usePatternRenderer(params: PatternParams) {
 
   const [view, setView] = useState({ x: 0, y: 0, scale: 1 });
   const [renderMs, setRenderMs] = useState(0);
-  const [warning, setWarning] = useState<string | null>(null);
   const viewRef = useRef(view);
-  viewRef.current = view;
+  useEffect(() => {
+    viewRef.current = view;
+  }, [view]);
+
+  const warning = useMemo(() => {
+    const complexityCost = params.gridX * params.gridY * params.complexity;
+    return complexityCost > 85000 ? 'High complexity can reduce responsiveness. Try lowering grid/complexity.' : null;
+  }, [params.complexity, params.gridX, params.gridY]);
 
   const renderView = useCallback(() => {
     if (!canvasRef.current || !patternCanvasRef.current) return;
@@ -44,9 +50,6 @@ export function usePatternRenderer(params: PatternParams) {
 
   useEffect(() => {
     const { W, H, effGridX, effGridY } = getTileDimensions(params);
-    const complexityCost = params.gridX * params.gridY * params.complexity;
-    setWarning(complexityCost > 85000 ? 'High complexity can reduce responsiveness. Try lowering grid/complexity.' : null);
-
     const tile = document.createElement('canvas');
     tile.width = W;
     tile.height = H;

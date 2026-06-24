@@ -1,8 +1,12 @@
-import { fireEvent, render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ControlsSidebar } from '../ControlsSidebar';
 import { DEFAULT_PATTERN_PARAMS } from '../../lib/engines';
 import { PRESET_PACKS } from '../../lib/presets';
+
+afterEach(() => {
+  cleanup();
+});
 
 function createProps() {
   return {
@@ -41,7 +45,7 @@ describe('ControlsSidebar', () => {
   it('renders grouped controls and empty favorites state', () => {
     render(<ControlsSidebar {...createProps()} />);
 
-    expect(screen.getByRole('heading', { name: 'Engine' })).toBeInTheDocument();
+    expect(screen.getByRole('region', { name: 'Engine' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Export Settings' })).toBeInTheDocument();
     expect(screen.getByText('No favorites saved yet.')).toBeInTheDocument();
   });
@@ -50,7 +54,7 @@ describe('ControlsSidebar', () => {
     const props = createProps();
     render(<ControlsSidebar {...props} />);
 
-    fireEvent.click(screen.getByRole('button', { name: PRESET_PACKS[0].presets[0].name }));
+    fireEvent.click(screen.getAllByRole('button', { name: PRESET_PACKS[0].presets[0].name })[0]);
 
     expect(props.onApplyPreset).toHaveBeenCalled();
   });

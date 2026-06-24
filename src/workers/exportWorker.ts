@@ -85,7 +85,7 @@ self.onmessage = async (event: MessageEvent<WorkerRequest>) => {
     const blob = await canvas.convertToBlob({ type: 'image/png' });
     const buffer = await blob.arrayBuffer();
     const response: WorkerResponse = { id: msg.id, ok: true, type: 'png', content: buffer };
-    self.postMessage(response, [buffer]);
+    self.postMessage(response);
   } catch (error) {
     const response: WorkerResponse = {
       id: msg.id,

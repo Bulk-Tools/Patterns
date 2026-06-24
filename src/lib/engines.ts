@@ -68,7 +68,7 @@ export function generateRandomParams(complexityLock: number): PatternParams {
 // 32-bit robust PRNG
 function mulberry32(a: number) {
   return function() {
-    var t = a += 0x6D2B79F5;
+    let t = a += 0x6D2B79F5;
     t = Math.imul(t ^ t >>> 15, t | 1);
     t ^= t + Math.imul(t ^ t >>> 7, t | 61);
     return ((t ^ t >>> 14) >>> 0) / 4294967296;
@@ -76,7 +76,8 @@ function mulberry32(a: number) {
 }
 
 export function getTileDimensions(params: PatternParams) {
-  let { gridX, gridY, engine } = params;
+  const { gridX, engine } = params;
+  let { gridY } = params;
   if (engine === 'truchet' || engine === 'hexagonal') {
     gridY = gridX; // Force square proportions for these to tile seamlessly
   } else if (engine === 'isometric') {
