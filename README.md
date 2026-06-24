@@ -43,6 +43,14 @@ npm run test
 npm run build
 ```
 
+## Deploy to GitHub Pages
+
+1. Go to **Settings → Pages** in the repository.
+2. Set **Source** to **GitHub Actions**.
+3. Push to the `main` branch.
+
+The workflow at `/home/runner/work/Patterns/Patterns/.github/workflows/deploy-pages.yml` builds the app and deploys the `dist` folder to GitHub Pages.
+
 ## Engine overview
 
 - **Isometric Lattice**: angular line networks with optional node circles
