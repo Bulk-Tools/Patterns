@@ -21,6 +21,27 @@ export interface PatternParams {
   seed: number;
 }
 
+export const DEFAULT_PATTERN_PARAMS: PatternParams = {
+  engine: 'isometric',
+  gridX: 10,
+  gridY: 10,
+  strokeWeight: 3,
+  complexity: 50,
+  palette: 'Cyberpunk',
+  seed: 1,
+};
+
+export function clampPatternParams(params: PatternParams): PatternParams {
+  return {
+    ...params,
+    gridX: Math.min(50, Math.max(2, Math.floor(params.gridX))),
+    gridY: Math.min(50, Math.max(2, Math.floor(params.gridY))),
+    strokeWeight: Math.min(25, Math.max(1, Math.floor(params.strokeWeight))),
+    complexity: Math.min(100, Math.max(1, Math.floor(params.complexity))),
+    seed: Math.floor(Math.abs(params.seed)) >>> 0,
+  };
+}
+
 export function generateRandomParams(complexityLock: number): PatternParams {
   const engines: EngineType[] = ['isometric', 'wave', 'ribbon', 'truchet', 'hexagonal', 'spirograph'];
   const engine = engines[Math.floor(Math.random() * engines.length)];
